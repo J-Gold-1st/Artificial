@@ -1,0 +1,809 @@
+   link my ai with ths api key so as it will fetch information on it
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ntirenganya Janvier - Software Developer Portfolio</title>
+    <link rel="shortcut icon" href="free" type="image/x-icon">
+    <style>
+       
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            color: #e0e0ff;
+            background: linear-gradient(to bottom, #0a001f, #0f003a, #14005a);
+            min-height: 100vh;
+            overflow-x: hidden;
+            animation: 20s fadeIn ease-out;
+
+        }
+        
+            
+
+        canvas {
+            position: fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            position: fixed;
+            top:0; left:0;
+            width:100%;
+            background: rgba(10, 0, 31, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(74, 144, 226, 0.25);
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .lang-switcher {
+            margin-left: 20px;
+        }
+        .lang-switcher select {
+            padding: 6px 10px;
+            background: rgba(74, 144, 226, 0.2);
+            color: blue;
+            border: 1px solid #4a90e2;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .lang-switcher select:focus {
+            outline: none;
+            box-shadow: 0 0 8px skyblue;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1100;
+        }
+        .hamburger span {
+            width: 28px; height: 3px;
+            background: #89c7ff;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        nav.blue-link {
+            display: flex;
+            gap: 30px;
+        }
+        nav.blue-link a {
+            color: #89c7ff;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav.blue-link a:hover { color: white; }
+
+        .container {
+            max-width: 1200px;
+            margin: 140px auto 80px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            margin: 60px 0;
+            background: rgba(20, 0, 60, 0.4);
+            padding: 35px;
+            border-radius: 12px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            animation: fadeInUp 1s linear;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            color: #a0c0ff;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+        }
+
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #24292e;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        .github-btn:hover {
+            background: #1f2328;
+            transform: translateY(-2px);
+        }
+
+        .skills .skill { margin: 25px 0; }
+        .skills .skill-name {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #d0d0ff;
+        }
+        .progress {
+            background: #1a0033;
+            border-radius: 20px;
+            height: 22px;
+            overflow: hidden;
+            border: 1px solid #4a90e2;
+        }
+        .progress-bar {
+            background: linear-gradient(to right, #4a90e2, #89c7ff);
+            height: 100%;
+            width: 0;
+            transition: width 1.8s ease-out;
+        }
+
+        ul li { margin: 12px 0; color: #d0d0ff; }
+
+        a { color: #89c7ff; text-decoration: none; }
+        a:hover { color: white; text-decoration: underline; }
+
+     footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;               /* Slightly taller for better centering */
+    background: rgba(20, 0, 60, 0.85);
+    backdrop-filter: blur(6px);
+    display: flex;              /* ← Key change */
+    align-items: center;        /* Vertical center */
+    justify-content: center;    /* Horizontal center */
+    color: #a0c0ff;
+    font-size: 0.95rem;
+    z-index: 900;
+    border-top: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.typing {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid #89c7ff;
+    animation: typing 4s steps(38) forwards, blink 0.8s infinite;
+    text-align: center;         /* Extra safety */
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to   { width: 30ch }
+}
+
+@keyframes blink {
+    50% { border-color: transparent }
+}
+
+@keyframes fadeInUp {
+    0% {
+        display: none;
+        transform: translateY(5vh);
+    }
+    80% {
+        display: block;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+        #ai-btn {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px; height: 70px;
+            background: transparent;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.6);
+            z-index: 950;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            transition: all 0.3s;
+        }
+        #ai-btn:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 8px 30px rgba(74, 144, 226, 0.8);
+        }
+
+        #chat-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1200;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-box {
+            width: 90%; max-width: 420px;
+            height: 80vh; max-height: 600px;
+            background: rgba(20, 0, 60, 0.95);
+            border: 1px solid #4a90e2;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            background: #4a90e2;
+            padding: 12px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+        }
+        .close-chat {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px 14px;
+            border-radius: 18px;
+            max-width: 80%;
+        }
+        .user-msg {
+            background: #4a90e2;
+            color: white;
+            margin-left: auto;
+        }
+        .bot-msg {
+            background: rgba(137, 199, 255, 0.15);
+            color: #e0e0ff;
+        }
+        .chat-input {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid rgba(74,144,226,0.3);
+        }
+        #chat-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #4a90e2;
+            border-radius: 30px 0 0 30px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            outline: none;
+        }
+        #send-btn {
+            padding: 10px 18px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+        }
+
+       @media (max-width: 768px) {
+
+    header{
+        padding:8px 0; /* reduce header height */
+    }
+
+    header h1{
+        font-size:1.2rem;
+    }
+
+    /* show short name on mobile */
+    header h1::before{
+        content:"N Janvier";
+    }
+
+    header h1{
+        visibility:hidden;
+        position:relative;
+    }
+
+    header h1::before{
+        visibility:visible;
+        position:absolute;
+        left:0;
+        top:0;
+    }
+
+    .hamburger { 
+        display: flex; 
+    }
+
+    /* hide language selector on mobile */
+    .lang-switcher{
+        display:none;
+    }
+
+    nav.blue-link {
+        position: fixed;
+        top:0; 
+        right:-100%;
+        height:100vh;
+        width:260px;
+        background: rgba(10, 0, 31, 0.98);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: right 0.4s;
+        z-index: 1000 ;
+    }
+
+    nav.blue-link.active { 
+        right:0; 
+    }
+
+    nav.blue-link a { 
+        font-size:1.3rem; 
+        margin:22px 0; 
+    }
+
+    .hamburger.active span:nth-child(1) { 
+        transform: rotate(45deg) translate(6px,6px); 
+    }
+
+    .hamburger.active span:nth-child(2) { 
+        opacity: 0; 
+    }
+
+    .hamburger.active span:nth-child(3) { 
+        transform: rotate(-45deg) translate(7px,-7px); 
+    }
+
+    .container { 
+        margin-top:100px; 
+    }
+
+    section{
+        padding:22px;
+    }
+
+    h2{
+        font-size:1.7rem;
+    }
+
+}
+#languageSelect{
+    background:rgb(1, 1, 56);
+    color:aliceblue ;
+    border: none;
+    border-radius: 20px;
+}
+.profile-logo{
+width:55px;
+height:55px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid #4a90e2;
+margin-right:10px;
+}
+
+.logo-box{
+display:flex;
+align-items:center;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+pointer-events:none;
+}
+ 
+html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body data-lang="en">
+    <canvas id="stars"></canvas>
+
+    <header>
+        <div class="header-container">
+            <img src="janvier.png" class="profile-logo">
+            <h1 data-key="title">Ntirenganya Janvier</h1>
+            <div class="lang-switcher">
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="sw">Kiswahili</option>
+                    <option value="rw">Kinyarwanda</option>
+                </select>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+            <nav class="blue-link" id="nav-menu">
+                <a href="#about" data-key="nav_about">About</a>
+                <a href="#skills" data-key="nav_skills">Skills</a>
+                <a href="#projects" data-key="nav_projects">Projects</a>
+                <a href="#education" data-key="nav_education">Education</a>
+                <a href="#contact" data-key="nav_contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="about">
+            <h2 data-key="about_title">About Me</h2>
+            <p data-key="about_text">I am a passionate software developer with a strong focus on web technologies. I build modern, responsive websites and applications. I also create content on YouTube to share development knowledge and ideas.</p>
+            <p data-key="youtube_text">YouTube Channel: <a href="https://www.youtube.com/@goldsounds-ur1" target="_blank">Gold Sounds</a></p>
+            <a href="https://github.com/J-Gold-1st" target="_blank" class="github-btn" data-key="github_btn">GitHub: J-Gold-1st</a>
+        </section>
+
+        <section id="skills">
+            <h2 data-key="skills_title">Skills</h2>
+            <div class="skill"><span class="skill-name" data-key="skill_web">Website Development</span><div class="progress"><div class="progress-bar" style="width:70%"></div></div></div>
+            <div class="skill"><span class="skill-name" data-key="skill_js">JavaScript</span><div class="progress"><div class="progress-bar" style="width:40%"></div></div></div>
+            <div class="skill"><span class="skill-name" data-key="skill_css">CSS</span><div class="progress"><div class="progress-bar" style="width:50%"></div></div></div>
+            <div class="skill"><span class="skill-name" data-key="skill_py">Python</span><div class="progress"><div class="progress-bar" style="width:8%"></div></div></div>
+            <div class="skill"><span class="skill-name" data-key="skill_vuephp">Vue.js & PHP</span><div class="progress"><div class="progress-bar" style="width:12%"></div></div></div>
+        </section>
+
+        <section id="projects">
+            <h2 data-key="projects_title">Projects</h2>
+            <p data-key="projects_text">Currently developing an <strong>Engineer Platform</strong> — a full web application to connect engineers, share technical resources, collaborate on projects, and build a strong community.</p>
+            <p data-key="tech_stack">Tech stack: HTML, CSS, JavaScript, Vue.js, PHP + backend integration.</p>
+        </section>
+
+        <section id="education">
+            <h2 data-key="education_title">Education</h2>
+            <ul>
+                <li data-key="edu_primary"><strong>Primary:</strong> Ep Cyaruzinge (P1–P6) — 26/30 in national exam.</li>
+                <li data-key="edu_secondary"><strong>Secondary (early):</strong> College Maranatha (S1–S3 first term).</li>
+                <li data-key="edu_ordinary"><strong>Ordinary Level:</strong> Saint Antoine Karangazi — 88% in NESA exam, ranked 5th in school.</li>
+                <li data-key="edu_advanced"><strong>Advanced Level:</strong> Level 3, Software Development trade — ESSA Nyarugunga.</li>
+            </ul>
+        </section>
+
+        <section id="contact">
+            <h2 data-key="contact_title">Contact Me</h2>
+            <p data-key="contact_text">Email: <strong>janvierexcellence@gmail.com</strong></p>
+            <p data-key="phone_text">Phone: <strong>+250 798 841 995</strong></p>
+            <p data-key="connect_text">Let's connect for projects, collaborations, or freelance work!</p>
+        </section>
+    </div>
+
+    <button id="ai-btn">NJ - Gold A.I</button>
+
+    <div id="chat-modal">
+        <div class="chat-box">
+            <div class="chat-header">
+                NJ - Gold A.I
+                <span class="close-chat" id="close-chat">×</span>
+            </div>
+            <div class="chat-body" id="chat-body">
+                <div class="message bot-msg" id="ai-greeting">Hello! you are wellcome to our AI, I'm NJ - Gold A.I. Ask me anything about Janvier 😊 (contact, github, food, prayer, skills, location...) OR anything else but i answer you in summary !</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chat-input" placeholder="Ask something...">
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        
+        <div class="typing" data-key="footer_text">&copy; 2026 Janvier-G. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // Translations object
+        const translations = {
+            en: {
+                title: "Ntirenganya Janvier",
+                nav_about: "About",
+                nav_skills: "Skills",
+                nav_projects: "Projects",
+                nav_education: "Education",
+                nav_contact: "Contact",
+                about_title: "About Me",
+                about_text: "I am a passionate software developer with a strong focus on web technologies. I build modern, responsive websites and applications. I also create content on YouTube to share development knowledge and ideas.",
+                youtube_text: "YouTube Channel: ",
+                github_btn: "GitHub: J-Gold-1st",
+                skills_title: "Skills",
+                skill_web: "Website Development",
+                skill_js: "JavaScript",
+                skill_css: "CSS",
+                skill_py: "Python",
+                skill_vuephp: "Vue.js & PHP",
+                projects_title: "Projects",
+                projects_text: "Currently developing an **Engineer Platform** — a full web application to connect engineers, share technical resources, collaborate on projects, and build a strong community.",
+                tech_stack: "Tech stack: HTML, CSS, JavaScript, Vue.js, PHP + backend integration.",
+                education_title: "Education",
+                edu_primary: "**Primary:** Ep Cyaruzinge (P1–P6) — 26/30 in national exam.",
+                edu_secondary: "**Secondary (early):** College Maranatha (S1–S3 first term).",
+                edu_ordinary: "**Ordinary Level:** Saint Antoine Karangazi — 88% in NESA exam, ranked 5th in school.",
+                edu_advanced: "**Advanced Level:** Level 3, Software Development trade — ESSA Nyarugunga.",
+                contact_title: "Contact Me",
+                contact_text: "Email: **janvierexcellence@gmail.com**",
+                phone_text: "Phone: **+250 798 841 995**",
+                connect_text: "Let's connect for projects, collaborations, or freelance work!",
+                footer_text: "© 2026 Janvier-G. All rights reserved.",
+                ai_greeting: "Hello! I'm NJ - Gold A.I. Ask me anything about Janvier 😊 (contact, github, food, prayer, skills, location...)"
+            },
+            fr: {
+                title: "Ntirenganya Janvier",
+                nav_about: "À propos",
+                nav_skills: "Compétences",
+                nav_projects: "Projets",
+                nav_education: "Éducation",
+                nav_contact: "Contact",
+                about_title: "À propos de moi",
+                about_text: "Je suis un développeur logiciel passionné avec une forte concentration sur les technologies web. Je construis des sites web modernes et réactifs et des applications. Je crée également du contenu sur YouTube pour partager des connaissances en développement.",
+                youtube_text: "Chaîne YouTube : ",
+                github_btn: "GitHub : J-Gold-1st",
+                skills_title: "Compétences",
+                skill_web: "Développement Web",
+                skill_js: "JavaScript",
+                skill_css: "CSS",
+                skill_py: "Python",
+                skill_vuephp: "Vue.js & PHP",
+                projects_title: "Projets",
+                projects_text: "Développement en cours d'une **Plateforme Ingénieur** — une application web complète pour connecter les ingénieurs, partager des ressources techniques, collaborer sur des projets et construire une communauté forte.",
+                tech_stack: "Technologies : HTML, CSS, JavaScript, Vue.js, PHP + intégration backend.",
+                education_title: "Éducation",
+                edu_primary: "**Primaire :** Ep Cyaruzinge (P1–P6) — 26/30 à l'examen national.",
+                edu_secondary: "**Secondaire (début) :** College Maranatha (S1–S3 premier trimestre).",
+                edu_ordinary: "**Niveau Ordinaire :** Saint Antoine Karangazi — 88% à l'examen NESA, 5e de l'école.",
+                edu_advanced: "**Niveau Avancé :** Niveau 3, filière Développement Logiciel — ESSA Nyarugunga.",
+                contact_title: "Contactez-moi",
+                contact_text: "Email : **janvierexcellence@gmail.com**",
+                phone_text: "Téléphone : **+250 798 841 995**",
+                connect_text: "Connectons-nous pour des projets, collaborations ou travail freelance !",
+                footer_text: "© 2026 Janvier-G. Tous droits réservés.",
+                ai_greeting: "Bonjour ! Je suis NJ - Gold A.I. Posez-moi n'importe quelle question sur Janvier 😊 (contact, github, nourriture, prière, compétences, localisation...)"
+            },
+            sw: {
+                title: "Ntirenganya Janvier",
+                nav_about: "Kuhusu Mimi",
+                nav_skills: "Ujuzi",
+                nav_projects: "Miradi",
+                nav_education: "Elimu",
+                nav_contact: "Wasiliana",
+                about_title: "Kuhusu Mimi",
+                about_text: "Mimi ni msanidi programu mwenye shauku na mkazo mkubwa kwenye teknolojia za wavuti. Ninaunda tovuti za kisasa na programu zinazobadilika. Pia ninaunda maudhui kwenye YouTube kushiriki maarifa ya maendeleo.",
+                youtube_text: "Kituo cha YouTube: ",
+                github_btn: "GitHub: J-Gold-1st",
+                skills_title: "Ujuzi",
+                skill_web: "Uundaji Wavuti",
+                skill_js: "JavaScript",
+                skill_css: "CSS",
+                skill_py: "Python",
+                skill_vuephp: "Vue.js & PHP",
+                projects_title: "Miradi",
+                projects_text: "Kwa sasa ninaunda **Jukwaa la Mhandisi** — programu ya wavuti kamili ya kuunganisha wahandisi, kushiriki rasilimali za kiufundi, kushirikiana kwenye miradi na kujenga jamii yenye nguvu.",
+                tech_stack: "Teknolojia: HTML, CSS, JavaScript, Vue.js, PHP + ushirikiano wa backend.",
+                education_title: "Elimu",
+                edu_primary: "**Msingi:** Ep Cyaruzinge (P1–P6) — 26/30 katika mtihani wa taifa.",
+                edu_secondary: "**Sekondari (mapema):** College Maranatha (S1–S3 robo ya kwanza).",
+                edu_ordinary: "**Nguvu ya Kawaida:** Saint Antoine Karangazi — 88% katika mtihani wa NESA, nafasi ya 5 shuleni.",
+                edu_advanced: "**Nguvu ya Juu:** Ngazi ya 3, Biashara ya Maendeleo ya Programu — ESSA Nyarugunga.",
+                contact_title: "Wasiliana nami",
+                contact_text: "Barua pepe: **janvierexcellence@gmail.com**",
+                phone_text: "Simu: **+250 798 841 995**",
+                connect_text: "Tuunganishe kwa miradi, ushirikiano au kazi ya uhuru!",
+                footer_text: "© 2026 Janvier-G. Haki zote zimehifadhiwa.",
+                ai_greeting: "Habari! Mimi ni NJ - Gold A.I. Niulize chochote kuhusu Janvier 😊 (mawasiliano, github, chakula, maombi, ujuzi, eneo...)"
+            },
+            rw: {
+                title: "Ntirenganya Janvier",
+                nav_about: "Ibyerekeye",
+                nav_skills: "Ubumenyi",
+                nav_projects: "Porogaramu",
+                nav_education: "Amashuri",
+                nav_contact: "Twandikire",
+                about_title: "Ibyerekeye",
+                about_text: "Ndi umushingwamanzi w'ikoranabuhanga ry'umwuga w'urukundo ku ikoranabuhanga ry'urubuga. Ndashaka kubaka urubuga rw'ikoranabuhanga rw'umwuga n'imishinga. Nanjye nkora ibintu kuri YouTube kugira ngo nshakire ubumenyi bw'ikoranabuhanga.",
+                youtube_text: "Umuyoboro wa YouTube: ",
+                github_btn: "GitHub: J-Gold-1st",
+                skills_title: "Ubumenyi",
+                skill_web: "Iterambere ry'Urubuga",
+                skill_js: "JavaScript",
+                skill_css: "CSS",
+                skill_py: "Python",
+                skill_vuephp: "Vue.js & PHP",
+                projects_title: "Porogaramu",
+                projects_text: "Kugeza ubu ndimo ndakora **Porogaramu y'Abubatsi** — porogaramu y'urubuga rwuzuye yo guhuza abubatsi, kugabana ibikoresho by'ikoranabuhanga, gukorana kuri porogaramu no kubaka umuryango ukomeye.",
+                tech_stack: "Ikoranabuhanga: HTML, CSS, JavaScript, Vue.js, PHP + ibikorwa by'inyuma(backend).",
+                education_title: "Amashuri",
+                edu_primary: "**Amashuri y'isanzure:** Ep Cyaruzinge (P1–P6) — 26/30 mu kizamini cy'igihugu.",
+                edu_secondary: "**Amashuri yisumbuye (ibanze):** College Maranatha (S1–S3 igihembwe cya mbere).",
+                edu_ordinary: "**Amashuri yisumbuye:** Saint Antoine Karangazi — 88% mu kizamini cya NESA, yagize urwaho rwa 5 mu ishuri.",
+                edu_advanced: "**Amashuri yisumbuye:** Icyiciro cya 3, Ubucuruzi bw'Ikoranabuhanga ry'umwuga — ESSA Nyarugunga.",
+                contact_title: "Twandikire",
+                contact_text: "Imeli: **janvierexcellence@gmail.com**",
+                phone_text: "Telefon: **+250 798 841 995**",
+                connect_text: "Duhuze kuri porogaramu, ubufatanye cyangwa akazi k'ubwisanzure!",
+                footer_text: "© 2026 Janvier-G. Uburenganzira bwose burinzwe.",
+                ai_greeting: "Muraho! Ndi NJ - Gold A.I. Mbona ikibazo icyo ari cyo cyose kuri Janvier 😊 (imiyoborere, github, ibyo kurya, isengesho, ubumenyi, ahantu...)"
+            }
+        };
+
+        // Change language function
+        function changeLanguage(lang) {
+            document.body.setAttribute('data-lang', lang);
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            // Update AI greeting
+            document.getElementById('ai-greeting').innerHTML = translations[lang].ai_greeting;
+        }
+
+        // Language selector
+        document.getElementById('languageSelect').addEventListener('change', (e) => {
+            changeLanguage(e.target.value);
+        });
+
+        // Stars background (unchanged)
+        const canvas = document.getElementById('stars');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        function createStars() {
+            stars = [];
+            for (let i = 0; i < 200; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5 + 0.5,
+                    speed: Math.random() * 0.5 + 0.1
+                });
+            }
+        }
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        function updateStars() {
+            stars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > canvas.height) { star.y = 0; star.x = Math.random() * canvas.width; }
+            });
+        }
+        function animate() { updateStars(); drawStars(); requestAnimationFrame(animate); }
+        window.addEventListener('resize', () => { resizeCanvas(); createStars(); });
+        resizeCanvas(); createStars(); animate();
+
+        // Hamburger Menu
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        document.querySelectorAll('.blue-link a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // AI Chatbot (unchanged except greeting init)
+        const chatModal = document.getElementById('chat-modal');
+        const aiBtn = document.getElementById('ai-btn');
+        const closeChat = document.getElementById('close-chat');
+        const chatBody = document.getElementById('chat-body');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        aiBtn.addEventListener('click', () => { chatModal.style.display = 'flex'; });
+        closeChat.addEventListener('click', () => { chatModal.style.display = 'none'; });
+        chatModal.addEventListener('click', e => { if (e.target === chatModal) chatModal.style.display = 'none'; });
+
+        function addMessage(text, isUser = false) {
+            const msg = document.createElement('div');
+            msg.classList.add('message', isUser ? 'user-msg' : 'bot-msg');
+            msg.innerHTML = text;
+            chatBody.appendChild(msg);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+
+        async function getBotResponse(input) {
+            const lower = input.toLowerCase().trim();
+            const lang = document.body.getAttribute('data-lang') || 'en';
+
+            if (lower.includes('phone') || lower.includes('contact') || lower.includes('number')) return translations[lang].phone_text.replace('**', '').replace('**', '');
+            if (lower.includes('email')) return translations[lang].contact_text.replace('**', '').replace('**', '');
+            if (lower.includes('github') || lower.includes('git')) return 'GitHub: <a href="https://github.com/J-Gold-1st" target="_blank">https://github.com/J-Gold-1st</a>';
+            if (lower.includes('food') || lower.includes('eat') || lower.includes('favorite food') || lower.includes('like to eat')) return "Janvier's most favorite meal is Cassava leaves together with Fried beans, Rice and Pasta 🍲";
+            if (lower.includes('pray') || lower.includes('prayer') || lower.includes('like to pray')) return "He loves and values somebody who likes to pray. Prayer is important to him 🙏";
+            if (lower.includes('live') || lower.includes('address') || lower.includes('home') || lower.includes('location')) return "Janvier lives in Rwanda, Kigali city, Gasabo district, Ndera sector, Rudashya cell, in Gasogi – near Kigali Infants Academy and Kigali ITS.";
+            if (lower.includes('church')) return "His church is Gasogi SDA Church (or sometimes Kanombe SDA).";
+              if (lower.includes('Who is janvier'.toLocaleLowerCase())) return "Janvier is the one who developed this AI, he studies in level 3 SoD at ESSA Nyarugunga , he is very intelligent, he likes someone who is strong in his religion so as he try to do what his religion teaches. Janvier's most favorite meal is Cassava leaves together with Fried beans, Rice and Pasta 🍲.  He lives in Rwanda, Kigali city, Gasabo district, Ndera sector, Rudashya cell, in Gasogi – near Kigali Infants Academy and Kigali ITS.   Are you satisfied😊";
+            if (lower.includes('youtube') || lower.includes('channel')) return 'YouTube: <a href="https://www.youtube.com/@goldsounds-ur1" target="_blank">Gold Sounds</a>';
+            if (lower.includes('skill') || lower.includes('skills')) return "Skills: Website Development 70%, JavaScript 40%, CSS 50%, Python 8%, Vue.js & PHP 12%.";
+            if (lower.includes('project') || lower.includes('projects')) return translations[lang].projects_text;
+            if (lower.includes('education') || lower.includes('study') || lower.includes('school')) return translations[lang].edu_primary + " " + translations[lang].edu_ordinary + " " + translations[lang].edu_advanced;
+
+            addMessage("Thinking...");
+            return await webSearch(input);
+        }
+
+        async function webSearch(query) {
+            try {
+                const res = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&pretty=1`);
+                const data = await res.json();
+                if (data.Abstract) {
+                    return `${data.Abstract} <br><a href="${data.AbstractURL || data.RelatedTopics?.[0]?.FirstURL || '#'}" target="_blank">Read more on DuckDuckGo</a>`;
+                } else if (data.RelatedTopics?.length > 0) {
+                    const topic = data.RelatedTopics[0];
+                    return `${topic.Text} <br><a href="${topic.FirstURL}" target="_blank">Learn more</a>`;
+                }
+                return "I found some info, but couldn't extract a clear summary. Try a more specific question!";
+            } catch (err) {
+                return "Sorry, web search failed right now. Ask me something about Janvier instead 😅";
+            }
+        }
+
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            addMessage(text, true);
+            chatInput.value = '';
+            const reply = await getBotResponse(text);
+            addMessage(reply);
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+
+        // Initialize default language
+        changeLanguage('en');
+    </script>
+</body>
+</html>  
